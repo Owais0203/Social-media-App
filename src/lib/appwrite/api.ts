@@ -2,7 +2,6 @@ import { ID, Query } from "appwrite";
 
 import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
-import errorsToRecord from "@hookform/resolvers/io-ts/dist/errorsToRecord.js";
 
 export async function createUserAccount(user: INewUser) {
   try {
@@ -363,6 +362,22 @@ export async function searchPosts(searchTerm: string) {
     if(!posts) throw Error;
 
     return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUsers(limit?: number) {
+  try {
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(10)]
+    );
+
+    if(!users) throw Error;
+
+    return users;
   } catch (error) {
     console.log(error);
   }
